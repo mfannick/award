@@ -1,12 +1,12 @@
 # instagram
-  This is a python application for user posting displaying images.
-  it includes search and user profile.
+  This is a python application for user posting their projects.
+  it includes search and project.
 
   ## setUp instruction
 
    | Required                                  | Description                                                       | How to run                            |
 |-------------------------------------------|-------------------------------------------------------------------|---------------------------------------|
-| A user visit the website signs up or logs in       | S/he can see posted images,search other user using their username                                 | The project is run using the browser |
+| A user visit the website signs up or logs in       | S/he can see posted projects,search them                               | The project is run using the browser |
                  
 
    ### Technologies used
@@ -14,7 +14,7 @@
      -Python
      -Django 
    ### BDD
-   <img src='./media/images/yes.png' alt='image'>
+   <img src='./media/projectImg/yes.png' alt='image'>
 
 
    ### Contact information
