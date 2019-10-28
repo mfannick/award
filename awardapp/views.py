@@ -265,7 +265,7 @@ def projectDetails(request,project_id):
         raise Http404()
     return render(request,"project/projectDetails.html", {'project':project})
 
-
+@login_required(login_url='/login/')
 def searchProject(request):
     if 'project' in request.GET and request.GET['project']:
         search_term=request.GET.get('project')
