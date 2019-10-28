@@ -34,12 +34,12 @@ if config('MODE')=="dev":
        
    }
 # production
-else:
-   DATABASES = {
-       'default': dj_database_url.config(
-           default=config('DATABASE_URL')
-       )
-   }
+# else:
+#    DATABASES = {
+#        'default': dj_database_url.config(
+#            default=config('DATABASE_URL')
+#        )
+#    }
 
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
@@ -129,14 +129,14 @@ WSGI_APPLICATION = 'awardProject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'award',
-#         'USER': 'annick',
-#     'PASSWORD':'escofavi',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'award',
+        'USER': 'annick',
+    'PASSWORD':'escofavi',
+    }
+}
 
 
 # Password validation

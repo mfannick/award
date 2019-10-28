@@ -13,6 +13,10 @@ class Project(models.Model):
 
     def __str__(self):
         return self.projectName
+    @classmethod
+    def searchProjects(cls,search_term):
+        project = cls.objects.filter(projectName__icontains=search_term)
+        return project
 
 class Profile(models.Model):
     user=models.OneToOneField(User,on_delete=models.CASCADE)

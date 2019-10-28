@@ -264,6 +264,18 @@ def projectDetails(request,project_id):
     except ObjectDoesNotExist:
         raise Http404()
     return render(request,"project/projectDetails.html", {'project':project})
+
+
+def searchProject(request):
+    if 'project' in request.GET and request.GET['project']:
+        search_term=request.GET.get('project')
+        projects=Project.searchProjects(search_term)
+        message = f"{search_term}"
+
+        return render(request,'project/search.html',{'message':message,'projects':projects})
+    else:
+        message='no search yet'
+        return render(request,'project/search.html',{'message':message})
         
             
 
