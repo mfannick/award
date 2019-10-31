@@ -1,0 +1,77 @@
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+<!-- Bootstrap core CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+<!-- Material Design Bootstrap -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.10/css/mdb.min.css" rel="stylesheet">
+
+<!-- JQuery -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.10/js/mdb.min.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Liu+Jian+Mao+Cao|Pacifico&display=swap" rel="stylesheet">
+
+{% load bootstrap4 %}
+{% load static %}
+
+
+<br>
+<br>
+<br>
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-5">
+        <div class="card">
+
+            <h3 class="card-header light-color black-text text-center py-4">
+                <strong style="font-family: 'Pacifico', cursive;">post Project</strong>
+            </h3>
+            <div class="card-body px-lg-5 pt-0">
+
+                <form data-url="/comment/" class="text-center yes" style="color: #757575;" method="POST">
+                    {% csrf_token%}
+                    {% bootstrap_form form%}
+                    <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" type="submit"
+                        style="font-family: 'Pacifico', cursive;">post comment</button>
+                    
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type='type/javascript' src="{% static 'js/project.js' %}"></script>
+<script type='type/javascript' src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        var myform = $('.yes')
+        myform.submit(function (event) {
+            event.preventDefault();
+            var mydata = myform.serialize()
+            var myUrl = myform.attr('data-url') || window.loaction.href;
+            $.ajax({
+                method: 'POST',
+                url: myUrl,
+                data: mydata,
+
+                error: handleError,
+
+
+
+            });
+            success = function (data) {
+                console.log(data)
+            }
+            function handleError(ThrowError) {
+                console.log(ThrowError)
+            }
+        });
+    })
+</script>

@@ -26,3 +26,17 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+class Comment(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    comment=models.TextField()
+    # projectF=models.OneToOneField(Project,on_delete=models.CASCADE,null=True)
+
+
+class Rating(models.Model):
+    user=models.OneToOneField(User,on_delete=models.CASCADE)
+    projectF=models.ForeignKey(Project,on_delete=models.CASCADE)
+    usability=models.IntegerField()
+    design=models.IntegerField()
+    content=models.IntegerField()

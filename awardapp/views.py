@@ -4,11 +4,10 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import login,logout
 from django.contrib.auth.decorators import login_required
-from .forms import UpdateProfile,UpdateUser,ProjectForm,CreateProfile
-from .models import Profile,Project
+from .forms import UpdateProfile,UpdateUser,ProjectForm,CreateProfile,CommentForm,UserRegistrationForm
+from .models import Profile,Project,Comment
 from django.core.exceptions import ObjectDoesNotExist
-from django.http  import Http404
-
+from django.http  import Http404,JsonResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializer import ProjectSerializer,ProfileSerializer
@@ -126,14 +125,19 @@ def signUp(request):
     currentUser=request.user
     if request.method=='POST':
         form=UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
+        pform=CreateProfile(request.POST)
+        if form.is_valid() and pform.is_valid():
+            user=form.save()
+            profile=pform.save(commit=False)
+            profile.user=user
+            profile=pform.save()
             username=form.cleaned_data.get('username')
             messages.success(request,f'{username} , your account was successfuly created')
             return redirect('logIn')
     else:
         form=UserCreationForm()
-    return render(request,'auth/signUp.html',{'form':form})
+        pform=CreateProfile()
+    return render(request,'auth/signUp.html',{'form':form ,'pform':pform})
 
 def logIn(request):
     if request.method=='POST':
@@ -154,14 +158,16 @@ def logOut(request):
         logout(request)
         return redirect('homePage')
 
+
+
+
+@login_required(login_url='/login/')
 def viewProfile(request):
-    profiles=Profile.profileEmail
     if request.method=='POST':
-        currentUser=request.user
-        profile=request.user
+        
+        profileForm=UpdateProfile(instance=request.user.profile)
         userForm=UpdateUser(request.POST,instance=request.user)
-        profileForm=UpdateProfile(request.POST,instance=profile)
-       
+        
 
         if userForm.is_valid() and profileForm.is_valid():
             userForm.save()
@@ -171,72 +177,11 @@ def viewProfile(request):
             return redirect('viewProfile')
     else: 
         userForm=UpdateUser(instance=request.user)
-        profileForm=UpdateProfile(instance=request.user)
+        profileForm=UpdateProfile(instance=request.user.profile)
         
 
-    return render(request,'auth/profile.html',{'uform':userForm,'pform':profileForm,'profiles':profiles})
-# @login_required(login_url='/login/')
-# def viewProfile(request):
-#     if request.method=='POST':
-        
-        
-#         userForm=UpdateUser(request.POST,instance=request.user)
-        
-#         # imageUpdate=UpdateProfileImage(request.POST,request.FILES,instance=profileImage)
+    return render(request,'auth/profile.html',{'uform':userForm,'pform':profileForm})
 
-#         if userForm.is_valid():
-#             userForm.save()
-           
-#             messages.success(request,f' your account has been updated successfuly ')
-#             return redirect('viewProfile')
-#     else:
-      
-#         # profileImage=request.user.profile.profileImage
-#         userForm=UpdateUser(instance=request.user)
-        
-#         # imageUpdate=UpdateProfileImage(instance=request.user.profile.profileImage)
-#         # ,'iform':imageUpdate
-        
-
-#     return render(request,'auth/profile.html',{'uform':userForm})
-
-
-
-# def updateProfile(request):
-#     current_user = request.user
-#     if request.method=='POST':
-#         form=UpdateProfile(request.POST,request.FILES)
-#         if form.is_valid():
-#             profiles=form.save()
-#             profiles==Profile
-            
-            
-
-#             if 'next' in request.POST:
-#                 return redirect(request.POST.get('next'))
-#             else:
-#                 return redirect('viewProfile' )
-#     else:
-#         form=UpdateProfile()
-#     return render(request,'auth/profileUpdate.html',{'form':form})
-
-
-# def createProfile(request):
-#     current_user = request.user
-#     if request.method=='POST':
-#         form=CreateProfile(request.POST,request.FILES)
-#         if form.is_valid():
-#             profile=form.save(commit=False)
-#             profile.userF=current_user
-#             profile.save()
-
-#             if 'next' in request.POST:
-#                 return redirect(request.POST.get('next'))
-#             else:
-#                 return redirect('viewProfile' )
-#     else:
-#         form=CreateProfile()
-#     return render(request,'auth/createProfile.html',{'form':form})
 
 @login_required(login_url='/login/')
 def postProject(request):
@@ -258,11 +203,8 @@ def postProject(request):
 
 
 
-def projectDetails(request,project_id):
-    try:
-        project = Project.objects.get(id = project_id)
-    except ObjectDoesNotExist:
-        raise Http404()
+def projectDetails(request,project_id):  
+    project = Project.objects.get(id = project_id)  
     return render(request,"project/projectDetails.html", {'project':project})
 
 @login_required(login_url='/login/')
@@ -276,8 +218,36 @@ def searchProject(request):
     else:
         message='no search yet'
         return render(request,'project/search.html',{'message':message})
-        
-            
 
+
+def comment(request):
+    form=CommentForm
+    
+    if request.is_ajax():
+        form=CommentForm(request.POST)
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.user=request.user
+            instance.save()
+            data={
+                'message':'project comment',
+            }
+            return JsonResponse(data) 
+    else:
+        form=CommentForm()
+    comments=Comment.objects.all()
+
+    return render(request,'project/comment.html',{'form':form,'comments':comments})
+
+def viewComment(request):
+    # project=request.user
+    # comments=comment.objects.filter(user=project)
+    comments=Comment.objects.all()
+    
+
+    return render(request,'project/comment.html',{'comments':comments})
+
+
+        
 
 
