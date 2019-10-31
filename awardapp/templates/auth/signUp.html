@@ -29,18 +29,19 @@
 
         <div class="card-body px-lg-5 pt-0">
 
-            <form class="text-center" style="color: #757575;" action="{% url 'signUp' %}" method="post">
-                      {% csrf_token %}
-                      {% bootstrap_form form %}
-                      {% bootstrap_form pform %}
-                      <div class=" form-group">
-                <button class="btn btn-outline-info  btn-sm" type="submit">SignUp</button>
+            <form class="text-center" style="color: #757575;" action="{% url 'signUp' %}" method="post"
+                enctype="multipart/form-data">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                {% bootstrap_form pform %}
+                <div class=" form-group">
+                    <button class="btn btn-outline-info  btn-sm" type="submit">SignUp</button>
+                </div>
+
+            </form>
         </div>
-
-        </form>
+        <div class="col-md-3"></div>
     </div>
-    <div class="col-md-3"></div>
-</div>
 
 
-{% endblock%}
+    {% endblock%}

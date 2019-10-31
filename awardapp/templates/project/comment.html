@@ -36,6 +36,9 @@
                 <form data-url="/comment/" class="text-center yes" style="color: #757575;" method="POST">
                     {% csrf_token%}
                     {% bootstrap_form form%}
+                    {% if request.GET.next%}
+                    <input type="hidden" name="next" value="{{request.GET.next}}">
+                    {% endif%}
                     <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" type="submit"
                         style="font-family: 'Pacifico', cursive;">post comment</button>
                     

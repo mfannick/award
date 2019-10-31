@@ -14,15 +14,15 @@ urlpatterns = [
     url(r'^viewProfile/$', views.viewProfile, name='viewProfile'),
     # url(r'^updateProfile/$', views.updateProfile, name='updateProfile'),
     # url(r'^createProfile/$', views.createProfile, name='createProfile'),
-    # url(r'comment/$', views.comment, name='comment'),
-    # url(r'viewComment/$', views.viewComment, name='viewComment'),
+    url(r'comment/$', views.comment, name='comment'),
+    url(r'viewComment/$', views.viewComment, name='viewComment'),
     url(r'^postProject/$', views.postProject, name='postProject'),
     url(r'^search/', views.searchProject, name='searchProject'),
     url(r'^projectDetails/(\d+)', views.projectDetails, name='projectDetails'),
     # url(r'^ajax/projectDetails/(\d+)', views.projectDetails, name='projectDetails'),
     url(r'^api/project/$', views.ProjectList.as_view()),
     url(r'^api/profile/$', views.ProfileList.as_view()),
-    url(r'api/project/project-id/(?P<pk>[0-9]+)/$',views.ProjectDescription.as_view()),
+
     
 
 ]

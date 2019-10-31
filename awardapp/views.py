@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import login,logout
 from django.contrib.auth.decorators import login_required
-from .forms import UpdateProfile,UpdateUser,ProjectForm,CreateProfile,UserRegistrationForm
-from .models import Profile,Project
+from .forms import UpdateProfile,UpdateUser,ProjectForm,CreateProfile,CommentForm,UserRegistrationForm
+from .models import Profile,Project,Comment
 from django.core.exceptions import ObjectDoesNotExist
 from django.http  import Http404,JsonResponse
 from rest_framework.response import Response
@@ -39,19 +39,19 @@ class ProjectList(APIView):
 
 class ProjectDescription(APIView):
     permission_classes = (IsAdminOrReadOnly,)
-    def get_merch(self, pk):
+    def getProject(self, pk):
         try:
             return Project.objects.get(pk=pk)
         except Project.DoesNotExist:
             return Http404
 
     def get(self, request, pk, format=None):
-        project = self.get_merch(pk)
+        project = self.getProject(pk)
         serializers = ProjectSerializer(project)
         return Response(serializers.data)
 
     def put(self, request, pk, format=None):
-        project = self.get_merch(pk)
+        project = self.getProject(pk)
         serializers = ProjectSerializer(project, request.data)
         if serializers.is_valid():
             serializers.save()
@@ -61,7 +61,7 @@ class ProjectDescription(APIView):
 
 
     def delete(self, request, pk, format=None):
-        project = self.get_merch(pk)
+        project = self.getProject(pk)
         project.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -86,19 +86,19 @@ class ProfileList(APIView):
 
 class ProfileDescription(APIView):
     permission_classes = (IsAdminOrReadOnly,)
-    def get_merch(self, pk):
+    def getProfile(self, pk):
         try:
             return Profile.objects.get(pk=pk)
         except Profile.DoesNotExist:
             return Http404
 
     def get(self, request, pk, format=None):
-        profile = self.get_merch(pk)
+        profile = self.getProfile(pk)
         serializers = ProfileSerializer(profile)
         return Response(serializers.data)
 
     def put(self, request, pk, format=None):
-        profile = self.get_merch(pk)
+        profile = self.getProfile(pk)
         serializers = ProfileSerializer(profile, request.data)
         if serializers.is_valid():
             serializers.save()
@@ -108,7 +108,7 @@ class ProfileDescription(APIView):
 
 
     def delete(self, request, pk, format=None):
-        profile = self.get_merch(pk)
+        profile = self.getProfile(pk)
         profile.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -219,33 +219,36 @@ def searchProject(request):
         message='no search yet'
         return render(request,'project/search.html',{'message':message})
 
-
-# def comment(request):
-#     form=CommentForm
+@login_required(login_url='/login/')
+def comment(request):
+    form=CommentForm
     
-#     if request.is_ajax():
-#         form=CommentForm(request.POST)
-#         if form.is_valid():
-#             instance=form.save(commit=False)
-#             instance.user=request.user
-#             instance.save()
-#             data={
-#                 'message':'project comment',
-#             }
-#             return JsonResponse(data) 
-#     else:
-#         form=CommentForm()
-#     comments=Comment.objects.all()
+    if request.is_ajax():
+        form=CommentForm(request.POST)
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.user=request.user
+            instance.save()
+            data={
+                'message':'project comment',
+            }
+            if 'next' in request.POST:
+                return redirect(request.POST.get('next'))
+            else:
+                return JsonResponse(data) 
+    else:
+        form=CommentForm()
+    comments=Comment.objects.all()
 
-#     return render(request,'project/comment.html',{'form':form,'comments':comments})
-
-# def viewComment(request):
-#     # project=request.user
-#     # comments=comment.objects.filter(user=project)
-#     comments=Comment.objects.all()
+    return render(request,'project/comment.html',{'form':form,'comments':comments})
+@login_required(login_url='/login/')
+def viewComment(request):
+    # project=request.user
+    # comments=comment.objects.filter(user=project)
+    comments=Comment.objects.all()
     
 
-#     return render(request,'project/comment.html',{'comments':comments})
+    return render(request,'project/comment.html',{'comments':comments})
 
 
         

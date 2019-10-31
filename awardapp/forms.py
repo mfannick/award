@@ -33,7 +33,7 @@ class CreateProfile(forms.ModelForm):
         model=models.Profile
         fields=['profileImage','profileBio','profileEmail']
 
-# class CommentForm(forms.ModelForm):
-#     class Meta:
-#         model=models.Comment
-#         fields=['comment']
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model=models.Comment
+        fields=['comment']
