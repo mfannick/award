@@ -28,10 +28,10 @@ class Profile(models.Model):
         return self.user.username
 
 
-class Comment(models.Model):
-    user=models.ForeignKey(User,on_delete=models.CASCADE)
-    comment=models.TextField()
-    # projectF=models.OneToOneField(Project,on_delete=models.CASCADE,null=True)
+# class Comment(models.Model):
+#     user=models.ForeignKey(User,on_delete=models.CASCADE)
+#     comment=models.TextField()
+#     # projectF=models.OneToOneField(Project,on_delete=models.CASCADE,null=True)
 
 
 class Rating(models.Model):
